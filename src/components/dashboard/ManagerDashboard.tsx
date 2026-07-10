@@ -128,10 +128,8 @@ export function ManagerDashboard() {
                       open={rejectingId === entry.id}
                       onOpenChange={(open) => setRejectingId(open ? entry.id : null)}
                     >
-                      <DialogTrigger asChild>
-                        <Button size="sm" variant="outline">
-                          Reject
-                        </Button>
+                      <DialogTrigger render={<Button size="sm" variant="outline" />}>
+                        Reject
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>

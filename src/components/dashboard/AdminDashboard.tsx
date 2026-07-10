@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { getEntries, Entry } from "@/lib/api/entries";
-import { createObjection, getObjections } from "@lib/api/objections";
+import { createObjection, getObjections, Objection } from "@/lib/api/objections";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function AdminDashboard() {
@@ -100,10 +100,8 @@ export function AdminDashboard() {
                       open={objectingId === entry.id}
                       onOpenChange={(open) => setObjectingId(open ? entry.id : null)}
                     >
-                      <DialogTrigger asChild>
-                        <Button size="sm" variant="outline">
-                          Raise objection
-                        </Button>
+                      <DialogTrigger render={<Button size="sm" variant="outline" />}>
+                        Raise objection
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -144,7 +142,7 @@ export function AdminDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {objections?.map((o) => (
+              {objections?.map((o: Objection) => (
                 <TableRow key={o.id}>
                   <TableCell className="max-w-xs truncate">{o.entry?.description ?? o.entryId}</TableCell>
                   <TableCell>{o.raiser?.name ?? o.raisedBy}</TableCell>
