@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import "./globals.css";
+import { QueryProvider } from "../lib/providers/QueryProvider";
 
 export const metadata: Metadata = {
-  title: "",
-  description: "",
+  title: "LedgerZ",
+  description: "Finance Department Management System",
 };
 
 export default function RootLayout({
@@ -11,8 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html>
-      <body>{children}</body>
+    <html lang="en">
+      <body className="bg-white text-slate-900 antialiased">
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

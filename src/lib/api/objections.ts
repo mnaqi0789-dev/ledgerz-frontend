@@ -1,45 +1,23 @@
 import { apiFetch } from "@/lib/api/client";
 
-export interface TreasuryHoldingFull {
+export interface Objection {
   id: number;
-  assetName: string;
-  quantity: number;
-  buyPrice: number;
-  currentPrice: number;
-  currentValue: number;
-  gainLossPercent: number;
-  lastPriceUpdate: string;
-  updatedAt: string;
+  entryId: number;
+  raisedBy: number;
+  note: string;
+  resolved: boolean;
+  createdAt: string;
+  entry?: { id: number; description: string; amount: string; status: string };
+  raiser?: { id: number; name: string };
 }
 
-export interface TreasuryHoldingSimple {
-  assetName: string;
-  currentValue: number;
-  gainLossPercent: number;
-}
-
-export function getTreasury<T = TreasuryHoldingFull | TreasuryHoldingSimple>() {
-  return apiFetch<T[]>("/treasury");
-}
-
-export function buyTreasury(input: {
-  assetName: string;
-  quantity: number;
-  price: number;
-}) {
-  return apiFetch("/treasury/buy", {
+export function createObjection(input: { entryId: number; note: string }) {
+  return apiFetch<Objection>("/objections", {
     method: "POST",
     body: JSON.stringify(input),
   });
 }
 
-export function sellTreasury(input: {
-  assetName: string;
-  quantity: number;
-  price: number;
-}) {
-  return apiFetch("/treasury/sell", {
-    method: "POST",
-    body: JSON.stringify(input),
-  });
+export function getObjections() {
+  return apiFetch<Objection[]>("/objections");
 }

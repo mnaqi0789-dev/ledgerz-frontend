@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -148,8 +148,8 @@ export function MakerDashboard() {
             </TableHeader>
             <TableBody>
               {entries?.map((entry: Entry) => (
-                <>
-                  <TableRow key={entry.id}>
+                <Fragment key={entry.id}>
+                  <TableRow>
                     <TableCell className="max-w-xs truncate">{entry.description}</TableCell>
                     <TableCell>{entry.category}</TableCell>
                     <TableCell>{entry.amount}</TableCell>
@@ -158,13 +158,13 @@ export function MakerDashboard() {
                     </TableCell>
                   </TableRow>
                   {entry.status === "rejected" && entry.rejectionReason && (
-                    <TableRow key={`${entry.id}-reason`}>
+                    <TableRow>
                       <TableCell colSpan={4} className="text-sm text-rose-600 bg-rose-50/50">
                         Rejection reason: {entry.rejectionReason}
                       </TableCell>
                     </TableRow>
                   )}
-                </>
+                </Fragment>
               ))}
             </TableBody>
           </Table>

@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { getEntries, Entry } from "@/lib/api/entries";
-import { createObjection, getObjections } from "@/lib/api/objections";
+import { createObjection, getObjections } from "@lib/api/objections";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function AdminDashboard() {
