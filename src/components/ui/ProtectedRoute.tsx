@@ -15,7 +15,10 @@ interface ProtectedRouteProps {
   allowedRoles?: AuthUser["role"][];
 }
 
-export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  children,
+  allowedRoles,
+}: ProtectedRouteProps) {
   const router = useRouter();
   const { user, token, hasHydrated } = useAuthStore();
 

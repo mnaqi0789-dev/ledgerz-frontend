@@ -21,7 +21,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getEntries, approveEntry, rejectEntry, Entry } from "@/lib/api/entries";
+import {
+  getEntries,
+  approveEntry,
+  rejectEntry,
+  Entry,
+} from "@/lib/api/entries";
 import { buyTreasury, sellTreasury } from "@/lib/api/treasury";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -48,19 +53,24 @@ export function ManagerDashboard() {
       queryClient.invalidateQueries({ queryKey: ["entries", "pending"] });
     },
     onError: (err) => {
-      setActionError(err instanceof Error ? err.message : "Something went wrong");
+      setActionError(
+        err instanceof Error ? err.message : "Something went wrong",
+      );
     },
   });
 
   const rejectMutation = useMutation({
-    mutationFn: ({ id, reason }: { id: number; reason: string }) => rejectEntry(id, reason),
+    mutationFn: ({ id, reason }: { id: number; reason: string }) =>
+      rejectEntry(id, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entries", "pending"] });
       setRejectingId(null);
       setRejectionReason("");
     },
     onError: (err) => {
-      setActionError(err instanceof Error ? err.message : "Something went wrong");
+      setActionError(
+        err instanceof Error ? err.message : "Something went wrong",
+      );
     },
   });
 
@@ -74,7 +84,11 @@ export function ManagerDashboard() {
 
     setTreasuryBusy(true);
     try {
-      const input = { assetName, quantity: Number(quantity), price: Number(price) };
+      const input = {
+        assetName,
+        quantity: Number(quantity),
+        price: Number(price),
+      };
       if (action === "buy") {
         await buyTreasury(input);
       } else {
@@ -85,7 +99,9 @@ export function ManagerDashboard() {
       setPrice("");
       queryClient.invalidateQueries({ queryKey: ["treasury"] });
     } catch (err) {
-      setTreasuryError(err instanceof Error ? err.message : "Something went wrong");
+      setTreasuryError(
+        err instanceof Error ? err.message : "Something went wrong",
+      );
     } finally {
       setTreasuryBusy(false);
     }
@@ -94,8 +110,12 @@ export function ManagerDashboard() {
   return (
     <div className="space-y-8">
       <Card className="p-6 border-slate-200">
-        <h2 className="font-serif text-xl text-slate-900 mb-4">Pending entries</h2>
-        {actionError && <p className="text-sm text-rose-600 mb-3">{actionError}</p>}
+        <h2 className="font-serif text-xl text-slate-900 mb-4">
+          Pending entries
+        </h2>
+        {actionError && (
+          <p className="text-sm text-rose-600 mb-3">{actionError}</p>
+        )}
         {isLoading ? (
           <p className="text-sm text-slate-500">Loading...</p>
         ) : (
@@ -112,8 +132,12 @@ export function ManagerDashboard() {
             <TableBody>
               {pendingEntries?.map((entry: Entry) => (
                 <TableRow key={entry.id}>
-                  <TableCell>{entry.submitter?.name ?? entry.submittedBy}</TableCell>
-                  <TableCell className="max-w-xs truncate">{entry.description}</TableCell>
+                  <TableCell>
+                    {entry.submitter?.name ?? entry.submittedBy}
+                  </TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {entry.description}
+                  </TableCell>
                   <TableCell>{entry.category}</TableCell>
                   <TableCell>{entry.amount}</TableCell>
                   <TableCell className="flex gap-2">
@@ -126,9 +150,13 @@ export function ManagerDashboard() {
                     </Button>
                     <Dialog
                       open={rejectingId === entry.id}
-                      onOpenChange={(open) => setRejectingId(open ? entry.id : null)}
+                      onOpenChange={(open) =>
+                        setRejectingId(open ? entry.id : null)
+                      }
                     >
-                      <DialogTrigger render={<Button size="sm" variant="outline" />}>
+                      <DialogTrigger
+                        render={<Button size="sm" variant="outline" />}
+                      >
                         Reject
                       </DialogTrigger>
                       <DialogContent>
@@ -144,9 +172,15 @@ export function ManagerDashboard() {
                           />
                           <Button
                             onClick={() =>
-                              rejectMutation.mutate({ id: entry.id, reason: rejectionReason })
+                              rejectMutation.mutate({
+                                id: entry.id,
+                                reason: rejectionReason,
+                              })
                             }
-                            disabled={rejectMutation.isPending || rejectionReason.trim().length === 0}
+                            disabled={
+                              rejectMutation.isPending ||
+                              rejectionReason.trim().length === 0
+                            }
                           >
                             Confirm rejection
                           </Button>
@@ -162,24 +196,42 @@ export function ManagerDashboard() {
       </Card>
 
       <Card className="p-6 border-slate-200">
-        <h2 className="font-serif text-xl text-slate-900 mb-4">Treasury actions</h2>
+        <h2 className="font-serif text-xl text-slate-900 mb-4">
+          Treasury actions
+        </h2>
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="space-y-2">
             <Label>Asset name</Label>
-            <Input value={assetName} onChange={(e) => setAssetName(e.target.value)} />
+            <Input
+              value={assetName}
+              onChange={(e) => setAssetName(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>Quantity</Label>
-            <Input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+            <Input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>Price</Label>
-            <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <Input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
           </div>
         </div>
-        {treasuryError && <p className="text-sm text-rose-600 mt-3">{treasuryError}</p>}
+        {treasuryError && (
+          <p className="text-sm text-rose-600 mt-3">{treasuryError}</p>
+        )}
         <div className="flex gap-2 mt-4">
-          <Button onClick={() => handleTreasurySubmit("buy")} disabled={treasuryBusy}>
+          <Button
+            onClick={() => handleTreasurySubmit("buy")}
+            disabled={treasuryBusy}
+          >
             Buy
           </Button>
           <Button

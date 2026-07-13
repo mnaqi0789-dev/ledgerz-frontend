@@ -2,11 +2,7 @@ import { apiFetch } from "@/lib/api/client";
 
 export type EntryType = "in" | "out" | "treasury_transfer";
 export type EntryCategory =
-  | "rent"
-  | "salaries"
-  | "client_payment"
-  | "treasury"
-  | "misc";
+  "rent" | "salaries" | "client_payment" | "treasury" | "misc";
 export type EntryStatus = "submitted" | "approved" | "rejected";
 
 export interface Entry {

@@ -23,7 +23,11 @@ import {
 } from "@/components/ui/table";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { getEntries, Entry } from "@/lib/api/entries";
-import { createObjection, getObjections, Objection } from "@/lib/api/objections";
+import {
+  createObjection,
+  getObjections,
+  Objection,
+} from "@/lib/api/objections";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function AdminDashboard() {
@@ -79,8 +83,12 @@ export function AdminDashboard() {
             <TableBody>
               {entries?.map((entry: Entry) => (
                 <TableRow key={entry.id}>
-                  <TableCell>{entry.submitter?.name ?? entry.submittedBy}</TableCell>
-                  <TableCell className="max-w-xs truncate">{entry.description}</TableCell>
+                  <TableCell>
+                    {entry.submitter?.name ?? entry.submittedBy}
+                  </TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {entry.description}
+                  </TableCell>
                   <TableCell>{entry.category}</TableCell>
                   <TableCell>{entry.amount}</TableCell>
                   <TableCell>
@@ -88,7 +96,10 @@ export function AdminDashboard() {
                   </TableCell>
                   <TableCell>
                     {entry._count && entry._count.objections > 0 ? (
-                      <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                      <Badge
+                        variant="outline"
+                        className="bg-amber-50 text-amber-700 border-amber-200"
+                      >
                         {entry._count.objections}
                       </Badge>
                     ) : (
@@ -98,9 +109,13 @@ export function AdminDashboard() {
                   <TableCell>
                     <Dialog
                       open={objectingId === entry.id}
-                      onOpenChange={(open) => setObjectingId(open ? entry.id : null)}
+                      onOpenChange={(open) =>
+                        setObjectingId(open ? entry.id : null)
+                      }
                     >
-                      <DialogTrigger render={<Button size="sm" variant="outline" />}>
+                      <DialogTrigger
+                        render={<Button size="sm" variant="outline" />}
+                      >
                         Raise objection
                       </DialogTrigger>
                       <DialogContent>
@@ -109,10 +124,21 @@ export function AdminDashboard() {
                         </DialogHeader>
                         <div className="space-y-3">
                           <Label>Note</Label>
-                          <Textarea value={note} onChange={(e) => setNote(e.target.value)} />
+                          <Textarea
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                          />
                           <Button
-                            onClick={() => objectionMutation.mutate({ entryId: entry.id, note })}
-                            disabled={objectionMutation.isPending || note.trim().length === 0}
+                            onClick={() =>
+                              objectionMutation.mutate({
+                                entryId: entry.id,
+                                note,
+                              })
+                            }
+                            disabled={
+                              objectionMutation.isPending ||
+                              note.trim().length === 0
+                            }
                           >
                             Submit objection
                           </Button>
@@ -144,10 +170,14 @@ export function AdminDashboard() {
             <TableBody>
               {objections?.map((o: Objection) => (
                 <TableRow key={o.id}>
-                  <TableCell className="max-w-xs truncate">{o.entry?.description ?? o.entryId}</TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {o.entry?.description ?? o.entryId}
+                  </TableCell>
                   <TableCell>{o.raiser?.name ?? o.raisedBy}</TableCell>
                   <TableCell className="max-w-xs truncate">{o.note}</TableCell>
-                  <TableCell>{new Date(o.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {new Date(o.createdAt).toLocaleDateString()}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
