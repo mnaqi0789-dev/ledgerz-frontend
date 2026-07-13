@@ -1,6 +1,5 @@
 "use client";
 
-import { ProtectedRoute } from "@/components/ui/ProtectedRoute";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { MakerDashboard } from "@/components/dashboard/MakerDashboard";
 import { ManagerDashboard } from "@/components/dashboard/ManagerDashboard";
@@ -26,11 +25,9 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <ProtectedRoute>
-      <main className="max-w-6xl mx-auto px-6 py-10">
-        <h1 className="font-serif text-2xl text-slate-900 mb-8">Dashboard</h1>
-        <DashboardContent />
-      </main>
-    </ProtectedRoute>
+    <main className="max-w-6xl mx-auto px-6 py-10">
+      <h1 className="font-serif text-2xl text-slate-900 mb-8">Dashboard</h1>
+      <DashboardContent />
+    </main>
   );
 }
