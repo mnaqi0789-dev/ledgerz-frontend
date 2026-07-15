@@ -1,10 +1,12 @@
+"use client";
+
 import { useState } from "react";
+import { PlusCircle, ListChecks } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SegmentedTabs } from "@/components/ui/SegmentedTabs";
 import {
   Select,
   SelectContent,
@@ -42,19 +44,23 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const ENTRY_TYPES: EntryType[] = ["in", "out", "treasury_transfer"];
 
 export function MakerDashboard() {
+  const [tab, setTab] = useState("submit");
+
   return (
-    <Tabs defaultValue="submit" className="w-full">
-      <TabsList>
-        <TabsTrigger value="submit">Submit entry</TabsTrigger>
-        <TabsTrigger value="mine">Your entries</TabsTrigger>
-      </TabsList>
-      <TabsContent value="submit" className="mt-6">
-        <SubmitEntryPanel />
-      </TabsContent>
-      <TabsContent value="mine" className="mt-6">
-        <YourEntriesPanel />
-      </TabsContent>
-    </Tabs>
+    <div>
+      <SegmentedTabs
+        active={tab}
+        onChange={setTab}
+        items={[
+          { value: "submit", label: "Submit entry", icon: <PlusCircle className="h-4 w-4" /> },
+          { value: "mine", label: "Your entries", icon: <ListChecks className="h-4 w-4" /> },
+        ]}
+      />
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+        {tab === "submit" && <SubmitEntryPanel />}
+        {tab === "mine" && <YourEntriesPanel />}
+      </div>
+    </div>
   );
 }
 
@@ -92,7 +98,7 @@ function SubmitEntryPanel() {
   }
 
   return (
-    <Card className="rounded-2xl border-slate-200 p-6 shadow-none">
+    <div>
       <h2 className="font-serif text-xl text-slate-900">Submit an entry</h2>
       <p className="mt-1 text-sm text-slate-500">Log a new transaction for review.</p>
       <form onSubmit={handleSubmit} className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -136,12 +142,12 @@ function SubmitEntryPanel() {
         </div>
         {error && <p className="text-sm text-rose-600 sm:col-span-2">{error}</p>}
         <div className="sm:col-span-2">
-          <Button type="submit" disabled={submitting} className="rounded-full px-6">
+          <Button type="submit" disabled={submitting}>
             {submitting ? "Submitting..." : "Submit entry"}
           </Button>
         </div>
       </form>
-    </Card>
+    </div>
   );
 }
 
@@ -184,7 +190,7 @@ function YourEntriesPanel() {
   }
 
   return (
-    <Card className="rounded-2xl border-slate-200 p-6 shadow-none">
+    <div>
       <h2 className="font-serif text-xl text-slate-900">Your entries</h2>
       <p className="mt-1 text-sm text-slate-500">Everything you have submitted so far.</p>
       <div className="mt-6">
@@ -221,7 +227,7 @@ function YourEntriesPanel() {
                         open={resubmittingId === entry.id}
                         onOpenChange={(open) => !open && setResubmittingId(null)}
                       >
-                        <DialogTrigger render={<Button size="sm" variant="outline" className="rounded-full" onClick={() => openResubmit(entry)} />}>
+                        <DialogTrigger render={<Button size="sm" variant="outline" onClick={() => openResubmit(entry)} />}>
                           Edit & resubmit
                         </DialogTrigger>
                         <DialogContent>
@@ -260,11 +266,7 @@ function YourEntriesPanel() {
                             <Label>Description</Label>
                             <Textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                             {error && <p className="text-sm text-rose-600">{error}</p>}
-                            <Button
-                              className="rounded-full"
-                              onClick={() => resubmitMutation.mutate()}
-                              disabled={resubmitMutation.isPending}
-                            >
+                            <Button onClick={() => resubmitMutation.mutate()} disabled={resubmitMutation.isPending}>
                               Resubmit
                             </Button>
                           </div>
@@ -278,6 +280,6 @@ function YourEntriesPanel() {
           </Table>
         )}
       </div>
-    </Card>
+    </div>
   );
 }

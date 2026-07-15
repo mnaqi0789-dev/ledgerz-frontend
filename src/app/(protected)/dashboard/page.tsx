@@ -27,17 +27,24 @@ export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-16">
-      <div className="inline-flex items-center gap-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
-        <span className="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
-          {user ? `${user.role} dashboard` : "Dashboard"}
-        </span>
-      </div>
-      <h1 className="mt-3 font-serif text-3xl text-slate-900">
-        Welcome back{user ? `, ${user.name}` : ""}
-      </h1>
-      <div className="mt-10">
+    <main className="min-h-screen px-6 pb-16 pt-10">
+      <div className="mx-auto max-w-6xl">
+        <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-6">
+          <div className="min-w-0">
+            <div className="inline-flex items-center gap-2">
+              <span className="h-1 w-1 rounded-full bg-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400">
+                {user?.role} console
+              </span>
+            </div>
+            <h1 className="mt-2 font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl">
+              Dashboard
+            </h1>
+            <p className="mt-1 truncate text-sm text-slate-500">
+              Signed in as <span className="font-medium text-slate-700">{user?.name}</span>
+            </p>
+          </div>
+        </header>
         <DashboardContent />
       </div>
     </main>

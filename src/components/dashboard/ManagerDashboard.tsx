@@ -1,11 +1,13 @@
+"use client";
+
 import { useState } from "react";
+import { ClipboardList, Landmark, Inbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SegmentedTabs } from "@/components/ui/SegmentedTabs";
 import {
   Select,
   SelectContent,
@@ -50,27 +52,38 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const ENTRY_TYPES: EntryType[] = ["in", "out", "treasury_transfer"];
 
 export function ManagerDashboard() {
+  const [tab, setTab] = useState("entries");
+  const { data: requests } = useQuery({
+    queryKey: ["access-requests", "pending"],
+    queryFn: () => getAccessRequests({ status: "pending" }),
+  });
+
   return (
-    <Tabs defaultValue="pending" className="w-full">
-      <TabsList>
-        <TabsTrigger value="pending">Pending entries</TabsTrigger>
-        <TabsTrigger value="treasury">Treasury</TabsTrigger>
-        <TabsTrigger value="requests">Requests</TabsTrigger>
-      </TabsList>
-      <TabsContent value="pending" className="mt-6">
-        <PendingEntriesPanel />
-      </TabsContent>
-      <TabsContent value="treasury" className="mt-6">
-        <TreasuryPanel />
-      </TabsContent>
-      <TabsContent value="requests" className="mt-6">
-        <RequestsPanel />
-      </TabsContent>
-    </Tabs>
+    <div>
+      <SegmentedTabs
+        active={tab}
+        onChange={setTab}
+        items={[
+          { value: "entries", label: "Entries", icon: <ClipboardList className="h-4 w-4" /> },
+          { value: "treasury", label: "Treasury", icon: <Landmark className="h-4 w-4" /> },
+          {
+            value: "requests",
+            label: "Requests",
+            icon: <Inbox className="h-4 w-4" />,
+            count: requests?.length ?? 0,
+          },
+        ]}
+      />
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+        {tab === "entries" && <EntriesPanel />}
+        {tab === "treasury" && <TreasuryPanel />}
+        {tab === "requests" && <RequestsPanel />}
+      </div>
+    </div>
   );
 }
 
-function PendingEntriesPanel() {
+function EntriesPanel() {
   const queryClient = useQueryClient();
   const [rejectingId, setRejectingId] = useState<number | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
@@ -136,7 +149,7 @@ function PendingEntriesPanel() {
   }
 
   return (
-    <Card className="rounded-2xl border-slate-200 p-6 shadow-none">
+    <div>
       <h2 className="font-serif text-xl text-slate-900">All entries</h2>
       <p className="mt-1 text-sm text-slate-500">Review, edit, or remove any entry.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
@@ -168,7 +181,6 @@ function PendingEntriesPanel() {
                       <>
                         <Button
                           size="sm"
-                          className="rounded-full"
                           onClick={() => approveMutation.mutate(entry.id)}
                           disabled={approveMutation.isPending}
                         >
@@ -178,7 +190,7 @@ function PendingEntriesPanel() {
                           open={rejectingId === entry.id}
                           onOpenChange={(open) => setRejectingId(open ? entry.id : null)}
                         >
-                          <DialogTrigger render={<Button size="sm" variant="outline" className="rounded-full" />}>
+                          <DialogTrigger render={<Button size="sm" variant="outline" />}>
                             Reject
                           </DialogTrigger>
                           <DialogContent>
@@ -192,7 +204,6 @@ function PendingEntriesPanel() {
                                 onChange={(e) => setRejectionReason(e.target.value)}
                               />
                               <Button
-                                className="rounded-full"
                                 onClick={() => rejectMutation.mutate({ id: entry.id, reason: rejectionReason })}
                                 disabled={rejectMutation.isPending || rejectionReason.trim().length === 0}
                               >
@@ -207,7 +218,7 @@ function PendingEntriesPanel() {
                       open={editingEntry?.id === entry.id}
                       onOpenChange={(open) => !open && setEditingEntry(null)}
                     >
-                      <DialogTrigger render={<Button size="sm" variant="outline" className="rounded-full" onClick={() => openEdit(entry)} />}>
+                      <DialogTrigger render={<Button size="sm" variant="outline" onClick={() => openEdit(entry)} />}>
                         Edit
                       </DialogTrigger>
                       <DialogContent>
@@ -245,11 +256,7 @@ function PendingEntriesPanel() {
                           </Select>
                           <Label>Description</Label>
                           <Textarea value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
-                          <Button
-                            className="rounded-full"
-                            onClick={() => updateMutation.mutate()}
-                            disabled={updateMutation.isPending}
-                          >
+                          <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending}>
                             Save changes
                           </Button>
                         </div>
@@ -258,7 +265,7 @@ function PendingEntriesPanel() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="rounded-full border-rose-200 text-rose-600 hover:bg-rose-50"
+                      className="border-rose-200 text-rose-600 hover:bg-rose-50"
                       onClick={() => {
                         if (confirm("Delete this entry? This cannot be undone from the UI.")) {
                           deleteMutation.mutate(entry.id);
@@ -275,7 +282,7 @@ function PendingEntriesPanel() {
           </Table>
         )}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -315,7 +322,7 @@ function TreasuryPanel() {
   }
 
   return (
-    <Card className="rounded-2xl border-slate-200 p-6 shadow-none">
+    <div>
       <h2 className="font-serif text-xl text-slate-900">Treasury actions</h2>
       <p className="mt-1 text-sm text-slate-500">
         Search a real asset on{" "}
@@ -345,19 +352,14 @@ function TreasuryPanel() {
       </div>
       {treasuryError && <p className="mt-3 text-sm text-rose-600">{treasuryError}</p>}
       <div className="mt-5 flex gap-2">
-        <Button className="rounded-full px-6" onClick={() => handleTreasurySubmit("buy")} disabled={treasuryBusy}>
+        <Button onClick={() => handleTreasurySubmit("buy")} disabled={treasuryBusy}>
           Buy
         </Button>
-        <Button
-          variant="outline"
-          className="rounded-full px-6"
-          onClick={() => handleTreasurySubmit("sell")}
-          disabled={treasuryBusy}
-        >
+        <Button variant="outline" onClick={() => handleTreasurySubmit("sell")} disabled={treasuryBusy}>
           Sell
         </Button>
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -387,14 +389,14 @@ function RequestsPanel() {
   });
 
   return (
-    <Card className="rounded-2xl border-slate-200 p-6 shadow-none">
+    <div>
       <h2 className="font-serif text-xl text-slate-900">Access requests</h2>
       <p className="mt-1 text-sm text-slate-500">Approve to create the account, or deny it.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
       {tempPassword && (
         <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
           Account created. Temporary password: <span className="font-mono font-semibold">{tempPassword}</span>{" "}
-          — share this with the user directly.
+          â€” share this with the user directly.
         </div>
       )}
       <div className="mt-6">
@@ -421,20 +423,14 @@ function RequestsPanel() {
                       {r.requestedRole}
                     </Badge>
                   </TableCell>
-                  <TableCell className="max-w-xs truncate text-slate-500">{r.note ?? "—"}</TableCell>
+                  <TableCell className="max-w-xs truncate text-slate-500">{r.note ?? "â€”"}</TableCell>
                   <TableCell className="flex gap-2">
-                    <Button
-                      size="sm"
-                      className="rounded-full"
-                      onClick={() => approveMutation.mutate(r.id)}
-                      disabled={approveMutation.isPending}
-                    >
+                    <Button size="sm" onClick={() => approveMutation.mutate(r.id)} disabled={approveMutation.isPending}>
                       Approve
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="rounded-full"
                       onClick={() => denyMutation.mutate(r.id)}
                       disabled={denyMutation.isPending}
                     >
@@ -449,6 +445,6 @@ function RequestsPanel() {
           <p className="text-sm text-slate-500">No pending requests.</p>
         )}
       </div>
-    </Card>
+    </div>
   );
 }
