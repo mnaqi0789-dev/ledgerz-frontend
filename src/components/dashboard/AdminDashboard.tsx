@@ -62,10 +62,11 @@ function EntriesPanel() {
   const [objectingId, setObjectingId] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showDeleted, setShowDeleted] = useState(false);
 
   const { data: entries, isLoading } = useQuery({
-    queryKey: ["entries", "all"],
-    queryFn: () => getEntries(),
+    queryKey: ["entries", "all", showDeleted],
+    queryFn: () => getEntries({ includeDeleted: showDeleted }),
   });
 
   const objectionMutation = useMutation({
@@ -82,8 +83,20 @@ function EntriesPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-xl text-slate-900">All entries</h2>
-      <p className="mt-1 text-sm text-slate-500">Full visibility, read-only.</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-serif text-xl text-slate-900">All entries</h2>
+          <p className="mt-1 text-sm text-slate-500">Full visibility, read-only.</p>
+        </div>
+        <label className="flex items-center gap-2 text-sm text-slate-600">
+          <input
+            type="checkbox"
+            checked={showDeleted}
+            onChange={(e) => setShowDeleted(e.target.checked)}
+          />
+          Show deleted
+        </label>
+      </div>
       {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
       <div className="mt-6">
         {isLoading ? (
@@ -103,13 +116,23 @@ function EntriesPanel() {
             </TableHeader>
             <TableBody>
               {entries?.map((entry: Entry) => (
-                <TableRow key={entry.id}>
+                <TableRow
+                  key={entry.id}
+                  className={entry.deletedAt ? "opacity-50" : undefined}
+                >
                   <TableCell>{entry.submitter?.name ?? entry.submittedBy}</TableCell>
                   <TableCell className="max-w-xs truncate">{entry.description}</TableCell>
                   <TableCell className="text-slate-600">{entry.category}</TableCell>
                   <TableCell>{entry.amount}</TableCell>
                   <TableCell>
-                    <StatusBadge status={entry.status} />
+                    <div className="flex items-center gap-2">
+                      <StatusBadge status={entry.status} />
+                      {entry.deletedAt && (
+                        <Badge variant="outline" className="border-slate-300 bg-slate-100 text-slate-500">
+                          Deleted
+                        </Badge>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     {entry._count && entry._count.objections > 0 ? (
@@ -125,7 +148,7 @@ function EntriesPanel() {
                       open={objectingId === entry.id}
                       onOpenChange={(open) => setObjectingId(open ? entry.id : null)}
                     >
-                      <DialogTrigger render={<Button size="sm" variant="outline" />}>
+                      <DialogTrigger render={<Button size="sm" variant="outline" disabled={!!entry.deletedAt} />}>
                         Raise objection
                       </DialogTrigger>
                       <DialogContent>

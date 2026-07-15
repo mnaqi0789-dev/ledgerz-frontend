@@ -57,12 +57,14 @@ export function getEntries(params?: {
   category?: EntryCategory;
   startDate?: string;
   endDate?: string;
+  includeDeleted?: boolean;
 }) {
   const query = new URLSearchParams();
   if (params?.status) query.set("status", params.status);
   if (params?.category) query.set("category", params.category);
   if (params?.startDate) query.set("startDate", params.startDate);
   if (params?.endDate) query.set("endDate", params.endDate);
+  if (params?.includeDeleted) query.set("includeDeleted", "true");
   const queryString = query.toString();
   return apiFetch<Entry[]>(`/entries${queryString ? `?${queryString}` : ""}`);
 }

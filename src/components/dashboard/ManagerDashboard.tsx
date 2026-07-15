@@ -304,7 +304,7 @@ function TreasuryPanel() {
 
     setTreasuryBusy(true);
     try {
-      const input = { assetName, quantity: Number(quantity), price: Number(price) };
+      const input = { assetName: assetName.toUpperCase(), quantity: Number(quantity), price: Number(price) };
       if (action === "buy") {
         await buyTreasury(input);
       } else {
@@ -322,24 +322,21 @@ function TreasuryPanel() {
   }
 
   return (
+<>
     <div>
       <h2 className="font-serif text-xl text-slate-900">Treasury actions</h2>
       <p className="mt-1 text-sm text-slate-500">
-        Search a real asset on{" "}
-        <a
-          href="https://www.coingecko.com"
-          target="_blank"
-          rel="noreferrer"
-          className="font-medium text-emerald-600 hover:text-emerald-700"
-        >
-          CoinGecko
+        Look up a real ticker on{" "}
+        
+     <a href="https://finance.yahoo.com" target="_blank" rel="noreferrer" className="font-medium text-emerald-600 hover:text-emerald-700">
+          Yahoo Finance
         </a>{" "}
-        to confirm a name, then record the trade below.
+        to confirm a symbol, then record the trade below.
       </p>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <div className="space-y-2">
-          <Label>Asset name</Label>
-          <Input value={assetName} onChange={(e) => setAssetName(e.target.value)} placeholder="bitcoin" />
+          <Label>Ticker symbol</Label>
+          <Input value={assetName} onChange={(e) => setAssetName(e.target.value)} placeholder="AAPL" />
         </div>
         <div className="space-y-2">
           <Label>Quantity</Label>
@@ -359,7 +356,7 @@ function TreasuryPanel() {
           Sell
         </Button>
       </div>
-    </div>
+    </div></>
   );
 }
 
@@ -396,7 +393,7 @@ function RequestsPanel() {
       {tempPassword && (
         <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
           Account created. Temporary password: <span className="font-mono font-semibold">{tempPassword}</span>{" "}
-          â€” share this with the user directly.
+          — share this with the user directly.
         </div>
       )}
       <div className="mt-6">
@@ -423,7 +420,7 @@ function RequestsPanel() {
                       {r.requestedRole}
                     </Badge>
                   </TableCell>
-                  <TableCell className="max-w-xs truncate text-slate-500">{r.note ?? "â€”"}</TableCell>
+                  <TableCell className="max-w-xs truncate text-slate-500">{r.note ?? "—"}</TableCell>
                   <TableCell className="flex gap-2">
                     <Button size="sm" onClick={() => approveMutation.mutate(r.id)} disabled={approveMutation.isPending}>
                       Approve
