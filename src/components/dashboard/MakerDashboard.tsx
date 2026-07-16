@@ -56,7 +56,7 @@ export function MakerDashboard() {
           { value: "mine", label: "Your entries", icon: <ListChecks className="h-4 w-4" /> },
         ]}
       />
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
         {tab === "submit" && <SubmitEntryPanel />}
         {tab === "mine" && <YourEntriesPanel />}
       </div>
@@ -99,7 +99,7 @@ function SubmitEntryPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-xl text-slate-900">Submit an entry</h2>
+      <h2 className="font-serif text-2xl text-slate-900">Submit an entry</h2>
       <p className="mt-1 text-sm text-slate-500">Log a new transaction for review.</p>
       <form onSubmit={handleSubmit} className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
@@ -191,7 +191,7 @@ function YourEntriesPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-xl text-slate-900">Your entries</h2>
+      <h2 className="font-serif text-2xl text-slate-900">Your entries</h2>
       <p className="mt-1 text-sm text-slate-500">Everything you have submitted so far.</p>
       <div className="mt-6">
         {isLoading ? (

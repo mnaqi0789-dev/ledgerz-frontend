@@ -49,7 +49,7 @@ export function AdminDashboard() {
           },
         ]}
       />
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
         {tab === "entries" && <EntriesPanel />}
         {tab === "objections" && <ObjectionsPanel />}
       </div>
@@ -85,7 +85,7 @@ function EntriesPanel() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-serif text-xl text-slate-900">All entries</h2>
+          <h2 className="font-serif text-2xl text-slate-900">All entries</h2>
           <p className="mt-1 text-sm text-slate-500">Full visibility, read-only.</p>
         </div>
         <label className="flex items-center gap-2 text-sm text-slate-600">
@@ -183,7 +183,7 @@ function ObjectionsPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-xl text-slate-900">Objections</h2>
+      <h2 className="font-serif text-2xl text-slate-900">Objections</h2>
       <p className="mt-1 text-sm text-slate-500">Everything flagged so far.</p>
       <div className="mt-6">
         {isLoading ? (

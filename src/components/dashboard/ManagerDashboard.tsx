@@ -74,7 +74,7 @@ export function ManagerDashboard() {
           },
         ]}
       />
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
         {tab === "entries" && <EntriesPanel />}
         {tab === "treasury" && <TreasuryPanel />}
         {tab === "requests" && <RequestsPanel />}
@@ -150,7 +150,7 @@ function EntriesPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-xl text-slate-900">All entries</h2>
+      <h2 className="font-serif text-2xl text-slate-900">All entries</h2>
       <p className="mt-1 text-sm text-slate-500">Review, edit, or remove any entry.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
       <div className="mt-6">
@@ -324,11 +324,15 @@ function TreasuryPanel() {
   return (
 <>
     <div>
-      <h2 className="font-serif text-xl text-slate-900">Treasury actions</h2>
+      <h2 className="font-serif text-2xl text-slate-900">Treasury actions</h2>
       <p className="mt-1 text-sm text-slate-500">
         Look up a real ticker on{" "}
         
-     <a href="https://finance.yahoo.com" target="_blank" rel="noreferrer" className="font-medium text-emerald-600 hover:text-emerald-700">
+       <a   href="https://finance.yahoo.com"
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-emerald-700 hover:text-emerald-800"
+        >
           Yahoo Finance
         </a>{" "}
         to confirm a symbol, then record the trade below.
@@ -387,7 +391,7 @@ function RequestsPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-xl text-slate-900">Access requests</h2>
+      <h2 className="font-serif text-2xl text-slate-900">Access requests</h2>
       <p className="mt-1 text-sm text-slate-500">Approve to create the account, or deny it.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
       {tempPassword && (

@@ -60,7 +60,7 @@ export default function RequestAccessPage() {
         <p className="mt-2 text-sm text-slate-500">
           A manager will review your request. You&apos;ll receive your login details once approved.
         </p>
-        <Link href="/login" className="mt-6 text-sm font-medium text-emerald-600 hover:text-emerald-700">
+        <Link href="/login" className="mt-6 text-sm font-medium text-emerald-700 hover:text-emerald-800">
           Back to login
         </Link>
       </section>
@@ -81,7 +81,7 @@ export default function RequestAccessPage() {
         A manager will review and create your account.
       </p>
 
-      <Card className="mt-8 rounded-2xl border-slate-200 p-6 shadow-none">
+      <Card className="mt-8 rounded-2xl border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.15)] backdrop-blur-xl">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label>Name</Label>
@@ -124,7 +124,7 @@ export default function RequestAccessPage() {
 
       <p className="mt-6 text-center text-sm text-slate-500">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-emerald-600 hover:text-emerald-700">
+        <Link href="/login" className="font-medium text-emerald-700 hover:text-emerald-800">
           Log in
         </Link>
       </p>

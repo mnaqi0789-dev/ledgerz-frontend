@@ -29,64 +29,56 @@ export default function TransactionsPage() {
   });
 
   return (
-    <main className="min-h-screen px-6 pb-16 pt-10">
+    <main className="min-h-screen px-6 pb-16 pt-6">
       <div className="mx-auto max-w-6xl">
-        <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-6">
-          <div className="min-w-0">
+        <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
             <div className="inline-flex items-center gap-2">
               <span className="h-1 w-1 rounded-full bg-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-700">
                 Ledger
               </span>
             </div>
-            <h1 className="mt-2 font-serif text-3xl tracking-tight text-slate-900 sm:text-4xl">
+            <h1 className="mt-2 font-serif text-4xl tracking-tight text-slate-900 sm:text-5xl">
               Transactions
             </h1>
           </div>
           <p className="text-sm text-slate-500">{entries?.length ?? 0} records</p>
         </header>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+        <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
           <div className="grid gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={category} onValueChange={(value) => setCategory(value as EntryCategory | "all")}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
+              <Select value={category} onValueChange={(v) => setCategory(v as EntryCategory | "all")}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All categories</SelectItem>
                   {ENTRY_CATEGORIES.map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {item.replaceAll("_", " ")}
-                    </SelectItem>
+                    <SelectItem key={item} value={item}>{item.replaceAll("_", " ")}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label>Status</Label>
-              <Select value={status} onValueChange={(value) => setStatus(value as EntryStatus | "all")}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
+              <Select value={status} onValueChange={(v) => setStatus(v as EntryStatus | "all")}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All statuses</SelectItem>
                   {statuses.map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {item}
-                    </SelectItem>
+                    <SelectItem key={item} value={item}>{item}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label>From</Label>
-              <Input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label>To</Label>
-              <Input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} />
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </div>
           </div>
 
@@ -104,25 +96,13 @@ export default function TransactionsPage() {
               </TableHeader>
               <TableBody>
                 {isLoading && (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-28 text-center text-slate-500">
-                      Loading transactions...
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={6} className="h-28 text-center text-slate-500">Loading transactions...</TableCell></TableRow>
                 )}
                 {isError && (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-28 text-center text-rose-600">
-                      Transactions could not be loaded.
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={6} className="h-28 text-center text-rose-600">Transactions could not be loaded.</TableCell></TableRow>
                 )}
                 {!isLoading && !isError && entries?.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-28 text-center text-slate-500">
-                      No transactions match these filters.
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={6} className="h-28 text-center text-slate-500">No transactions match these filters.</TableCell></TableRow>
                 )}
                 {entries?.map((entry) => (
                   <TableRow key={entry.id}>
@@ -137,9 +117,7 @@ export default function TransactionsPage() {
                     <TableCell className="whitespace-nowrap font-medium text-slate-900">
                       {formatCurrency(entry.amount)}
                     </TableCell>
-                    <TableCell>
-                      <StatusBadge status={entry.status} />
-                    </TableCell>
+                    <TableCell><StatusBadge status={entry.status} /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>

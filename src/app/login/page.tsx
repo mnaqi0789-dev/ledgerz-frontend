@@ -21,12 +21,10 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-
     if (!email || !password) {
       setError("Email and password are required");
       return;
     }
-
     setSubmitting(true);
     try {
       const response = await login({ email, password });
@@ -41,19 +39,21 @@ export default function LoginPage() {
 
   return (
     <section className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-6 py-24">
-      <div className="inline-flex items-center gap-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
+      <Link href="/" className="inline-flex items-center gap-2">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
         <span className="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
           LedgerZ
         </span>
-      </div>
+      </Link>
 
-      <h1 className="mt-4 font-serif text-3xl text-slate-900">Log in</h1>
+      <h1 className="mt-6 font-serif text-4xl tracking-tight text-slate-900">
+        Welcome back.
+      </h1>
       <p className="mt-2 text-sm text-slate-500">
         Enter your credentials to access your dashboard.
       </p>
 
-      <Card className="mt-8 border-slate-200 p-6">
+      <Card className="mt-8 rounded-2xl border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.15)] backdrop-blur-xl">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label>Email</Label>
@@ -74,7 +74,11 @@ export default function LoginPage() {
             />
           </div>
           {error && <p className="text-sm text-rose-600">{error}</p>}
-          <Button type="submit" disabled={submitting} className="w-full rounded-full">
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="w-full rounded-full bg-emerald-600 hover:bg-emerald-700"
+          >
             {submitting ? "Logging in..." : "Log in"}
           </Button>
         </form>
@@ -82,7 +86,7 @@ export default function LoginPage() {
 
       <p className="mt-6 text-center text-sm text-slate-500">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-medium text-blue-600 hover:text-blue-700">
+        <Link href="/register" className="font-medium text-emerald-700 hover:text-emerald-800">
           Create one
         </Link>
       </p>

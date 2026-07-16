@@ -6,9 +6,9 @@ import { AppNav } from "@/components/ui/AppNav";
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50/60">
         <AppNav />
-        {children}
+        <div className="pt-6">{children}</div>
       </div>
     </ProtectedRoute>
   );
