@@ -1,23 +1,20 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import {
   Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart,
   ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import { Card } from "@/components/ui/card";
-import { getOverview } from "@/lib/api/overview";
-import { getTreasury, TreasuryHoldingSimple } from "@/lib/api/treasury";
+import { useOverview } from "@/lib/hooks/useOverview";
+import { useTreasury } from "@/lib/hooks/useTreasury";
+import { TreasuryHoldingSimple } from "@/lib/api/treasury";
 import { formatCurrency } from "@/lib/formatters";
 
 const PIE_COLORS = ["#059669", "#10b981", "#34d399", "#6ee7b7", "#a7f3d0", "#047857"];
 
 export default function OverviewPage() {
-  const { data, isLoading, isError } = useQuery({ queryKey: ["overview"], queryFn: getOverview });
-  const { data: holdings } = useQuery({
-    queryKey: ["treasury", "simple"],
-    queryFn: () => getTreasury<TreasuryHoldingSimple>(),
-  });
+  const { data, isLoading, isError } = useOverview();
+  const { data: holdings } = useTreasury<TreasuryHoldingSimple>("simple");
 
   const categories = Object.entries(data?.categoryTotals ?? {}).sort(([, a], [, b]) => b - a);
   const categoryChartData = categories.map(([category, amount]) => ({

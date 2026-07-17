@@ -1,19 +1,18 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getTreasury, TreasuryHoldingFull, TreasuryHoldingSimple } from "@/lib/api/treasury";
+import { TreasuryHoldingFull, TreasuryHoldingSimple } from "@/lib/api/treasury";
+import { useTreasury } from "@/lib/hooks/useTreasury";
 import { formatCurrency, formatPercent } from "@/lib/formatters";
 import { useAuthStore } from "@/lib/stores/authStore";
 
 export default function TreasuryPage() {
   const user = useAuthStore((s) => s.user);
   const isManager = user?.role === "manager";
-  const { data: holdings, isLoading, isError } = useQuery({
-    queryKey: ["treasury", isManager ? "full" : "simple"],
-    queryFn: () => (isManager ? getTreasury<TreasuryHoldingFull>() : getTreasury<TreasuryHoldingSimple>()),
-  });
+  const { data: holdings, isLoading, isError } = useTreasury<TreasuryHoldingFull | TreasuryHoldingSimple>(
+    isManager ? "full" : "simple",
+  );
 
   return (
     <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-7xl px-4 py-8 sm:px-6">
@@ -57,8 +56,8 @@ export default function TreasuryPage() {
                   <TableRow key={holding.assetName}>
                     <TableCell className="font-medium text-slate-900">{holding.assetName}</TableCell>
                     <TableCell>
-                      <a
-                        href={`https://finance.yahoo.com/quote/${holding.assetName}`}
+                      
+                       <a href={`https://finance.yahoo.com/quote/${holding.assetName}`}
                         target="_blank"
                         rel="noreferrer"
                         className="font-medium text-emerald-700 hover:text-emerald-800"

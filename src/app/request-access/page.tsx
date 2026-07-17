@@ -116,7 +116,7 @@ export default function RequestAccessPage() {
             <Textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Why do you need access?" />
           </div>
           {error && <p className="text-sm text-rose-600">{error}</p>}
-          <Button type="submit" disabled={submitting} className="w-full rounded-full bg-emerald-600 hover:bg-emerald-700">
+          <Button type="submit" disabled={submitting} className="w-full bg-emerald-600 hover:bg-emerald-700">
             {submitting ? "Sending..." : "Send request"}
           </Button>
         </form>

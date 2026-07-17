@@ -1,32 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { ENTRY_CATEGORIES, EntryCategory, EntryStatus, getEntries } from "@/lib/api/entries";
+import { ENTRY_CATEGORIES, EntryCategory, EntryStatus } from "@/lib/api/entries";
+import { useEntries } from "@/lib/hooks/useEntries";
+import { useFilterStore } from "@/lib/stores/filterStore";
 import { formatCurrency } from "@/lib/formatters";
 
 const statuses: EntryStatus[] = ["submitted", "approved", "rejected"];
 
 export default function TransactionsPage() {
-  const [category, setCategory] = useState<EntryCategory | "all">("all");
-  const [status, setStatus] = useState<EntryStatus | "all">("all");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const category = useFilterStore((s) => s.category);
+  const status = useFilterStore((s) => s.status);
+  const startDate = useFilterStore((s) => s.startDate);
+  const endDate = useFilterStore((s) => s.endDate);
+  const setCategory = useFilterStore((s) => s.setCategory);
+  const setStatus = useFilterStore((s) => s.setStatus);
+  const setStartDate = useFilterStore((s) => s.setStartDate);
+  const setEndDate = useFilterStore((s) => s.setEndDate);
+  const resetFilters = useFilterStore((s) => s.resetFilters);
+
   const filters = {
     category: category === "all" ? undefined : category,
     status: status === "all" ? undefined : status,
     startDate: startDate || undefined,
     endDate: endDate || undefined,
   };
-  const { data: entries, isLoading, isError } = useQuery({
-    queryKey: ["entries", "transactions", filters],
-    queryFn: () => getEntries(filters),
-  });
+  const { data: entries, isLoading, isError } = useEntries("transactions", filters);
+
+  const hasActiveFilters = category !== "all" || status !== "all" || startDate !== "" || endDate !== "";
 
   return (
     <main className="min-h-screen px-6 pb-16 pt-6">
@@ -81,6 +87,14 @@ export default function TransactionsPage() {
               <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </div>
           </div>
+
+          {hasActiveFilters && (
+            <div className="mt-4 flex justify-end">
+              <Button variant="ghost" size="sm" onClick={resetFilters}>
+                Reset filters
+              </Button>
+            </div>
+          )}
 
           <div className="mt-6 overflow-x-auto border-t border-slate-100 pt-6">
             <Table>

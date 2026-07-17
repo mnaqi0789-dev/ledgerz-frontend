@@ -69,7 +69,7 @@ export default function RegisterPage() {
             and a manager will set up your account.
           </p>
           <Link href="/request-access">
-            <Button className="mt-4 w-full rounded-full bg-emerald-600 hover:bg-emerald-700">
+            <Button className="mt-4 w-full bg-emerald-600 hover:bg-emerald-700">
               Request access
             </Button>
           </Link>
@@ -118,7 +118,7 @@ export default function RegisterPage() {
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-full bg-emerald-600 hover:bg-emerald-700"
+              className="w-full bg-emerald-600 hover:bg-emerald-700"
             >
               {submitting ? "Creating account..." : "Create account"}
             </Button>
