@@ -285,8 +285,10 @@ function EntriesPanel() {
 
 function RequestsPanel() {
   const queryClient = useQueryClient();
-  const [tempPassword, setTempPassword] = useState<string | null>(null);
+  const [approvingId, setApprovingId] = useState<number | null>(null);
+  const [password, setPassword] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
+  const [lastCreatedEmail, setLastCreatedEmail] = useState<string | null>(null);
 
   const { data: requests, isLoading } = useQuery({
     queryKey: ["access-requests", "pending"],
@@ -294,10 +296,12 @@ function RequestsPanel() {
   });
 
   const approveMutation = useMutation({
-    mutationFn: (id: number) => approveAccessRequest(id),
+    mutationFn: ({ id, password }: { id: number; password: string }) => approveAccessRequest(id, password),
     onSuccess: (data) => {
-      setTempPassword(data.tempPassword);
+      setLastCreatedEmail(data.request.email);
       queryClient.invalidateQueries({ queryKey: ["access-requests"] });
+      setApprovingId(null);
+      setPassword("");
     },
     onError: (err) => setActionError(err instanceof Error ? err.message : "Something went wrong"),
   });
@@ -313,10 +317,9 @@ function RequestsPanel() {
       <h2 className="font-serif text-2xl text-slate-900">Access requests</h2>
       <p className="mt-1 text-sm text-slate-500">Approve to create the account, or deny it.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
-      {tempPassword && (
+      {lastCreatedEmail && (
         <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
-          Account created. Temporary password: <span className="font-mono font-semibold">{tempPassword}</span>{" "}
-          — share this with the user directly.
+          Account created for {lastCreatedEmail} — share the password with them directly.
         </div>
       )}
       <div className="mt-6">
@@ -345,9 +348,35 @@ function RequestsPanel() {
                   </TableCell>
                   <TableCell className="max-w-xs truncate text-slate-500">{r.note ?? "—"}</TableCell>
                   <TableCell className="flex gap-2">
-                    <Button size="sm" onClick={() => approveMutation.mutate(r.id)} disabled={approveMutation.isPending}>
-                      Approve
-                    </Button>
+                    <Dialog
+                      open={approvingId === r.id}
+                      onOpenChange={(open) => {
+                        setApprovingId(open ? r.id : null);
+                        if (!open) setPassword("");
+                      }}
+                    >
+                      <DialogTrigger render={<Button size="sm" />}>Approve</DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Set a password for {r.name}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-3">
+                          <Label>Password (min. 8 characters)</Label>
+                          <Input
+                            type="text"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Choose a password to share with them"
+                          />
+                          <Button
+                            onClick={() => approveMutation.mutate({ id: r.id, password })}
+                            disabled={approveMutation.isPending || password.length < 8}
+                          >
+                            Create account
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                     <Button
                       size="sm"
                       variant="outline"

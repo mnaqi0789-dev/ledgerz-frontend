@@ -25,6 +25,9 @@ export async function apiFetch<T>(
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 401 && token) {
+      useAuthStore.getState().logout();
+    }
     const message =
       data && data.message ? data.message : "Something went wrong";
     throw new Error(message);

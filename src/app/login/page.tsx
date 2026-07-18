@@ -9,6 +9,13 @@ import { Card } from "@/components/ui/card";
 import { login } from "@/lib/api/auth";
 import { useAuthStore } from "@/lib/stores/authStore";
 
+const DEMO_ACCOUNTS = [
+  { role: "Maker 1", email: "maker1@ledgerz.com" },
+  { role: "Maker 2", email: "maker2@ledgerz.com" },
+  { role: "Manager", email: "manager@ledgerz.com" },
+  { role: "Admin", email: "admin@ledgerz.com" },
+];
+
 export default function LoginPage() {
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
@@ -52,7 +59,19 @@ export default function LoginPage() {
         Enter your credentials to access your dashboard.
       </p>
 
-      <Card className="mt-8 border-slate-200 p-6">
+      <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs text-emerald-800">
+        <p className="font-semibold">To demo the app, use these credentials:</p>
+        <ul className="mt-2 space-y-1">
+          {DEMO_ACCOUNTS.map((a) => (
+            <li key={a.email}>
+              <span className="font-medium">{a.role}:</span> {a.email}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-2">Password for all: password123</p>
+      </div>
+
+      <Card className="mt-6 border-slate-200 p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label>Email</Label>
