@@ -12,17 +12,3 @@ export function login(input: { email: string; password: string }) {
     body: JSON.stringify(input),
   });
 }
-
-export interface RegisterInput {
-  name: string;
-  email: string;
-  password: string;
-  role: "maker" | "manager" | "admin";
-}
-
-export function register(input: RegisterInput) {
-  return apiFetch<AuthUser>("/auth/register", {
-    method: "POST",
-    body: JSON.stringify(input),
-  });
-}

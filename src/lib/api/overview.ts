@@ -8,9 +8,6 @@ export interface Overview {
   netCashFlow: number;
   pendingEntries: number;
   approvedEntryCount: number;
-  treasuryValue: number;
-  treasuryCost: number;
-  unrealizedGainLoss: number;
   categoryTotals: Record<string, number>;
 }
 
