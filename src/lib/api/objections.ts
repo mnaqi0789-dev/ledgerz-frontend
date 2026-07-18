@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api/client";
+import { EntryType, EntryCategory, EntryStatus } from "@/lib/api/entries";
 
 export interface Objection {
   id: number;
@@ -7,7 +8,15 @@ export interface Objection {
   note: string;
   resolved: boolean;
   createdAt: string;
-  entry?: { id: number; description: string; amount: string; status: string };
+  entry?: {
+    id: number;
+    description: string;
+    amount: string;
+    status: EntryStatus;
+    type: EntryType;
+    category: EntryCategory;
+    deletedAt: string | null;
+  };
   raiser?: { id: number; name: string };
 }
 

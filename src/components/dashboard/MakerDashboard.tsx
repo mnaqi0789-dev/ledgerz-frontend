@@ -162,7 +162,7 @@ function YourEntriesPanel() {
 
   const { data: entries, isLoading } = useQuery({
     queryKey: ["entries", "mine"],
-    queryFn: () => getEntries(),
+    queryFn: () => getEntries({ mine: true }),
   });
 
   const resubmitMutation = useMutation({
