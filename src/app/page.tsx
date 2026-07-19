@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Ledgerz — Finance, accounted for.",
+};
 
 export default function HomePage() {
   return (
@@ -49,10 +54,10 @@ export default function HomePage() {
 function Stat({ value, label, accent }: { value: string; label: string; accent?: boolean }) {
   return (
     <div className="flex flex-col items-center">
-      <span className={`font-serif text-2xl font-light ${accent ? "text-blue-600" : "text-slate-900"}`}>
+      <span className={`text-lg font-semibold ${accent ? "text-blue-600" : "text-slate-900"}`}>
         {value}
       </span>
-      <span className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</span>
+      <span className="text-xs uppercase tracking-wide text-slate-400">{label}</span>
     </div>
   );
 }
