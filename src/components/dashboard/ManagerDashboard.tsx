@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ClipboardList, Inbox, MessageSquareWarning } from "lucide-react";
+import { useConfirmStore } from "@/lib/stores/confirmStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -276,8 +277,12 @@ function EntriesPanel() {
                       size="sm"
                       variant="outline"
                       className="border-rose-200 text-rose-600 hover:bg-rose-50"
-                      onClick={() => {
-                        if (confirm("Delete this entry? This cannot be undone from the UI.")) {
+                      onClick={async () => {
+                        const ok = await useConfirmStore.getState().ask(
+                          "Delete this entry?",
+                          "This cannot be undone from the UI.",
+                        );
+                        if (ok) {
                           deleteMutation.mutate(entry.id);
                         }
                       }}
@@ -482,8 +487,12 @@ function ObjectionsPanel() {
                           size="sm"
                           variant="outline"
                           className="border-rose-200 text-rose-600 hover:bg-rose-50"
-                          onClick={() => {
-                            if (confirm("Delete this entry? This cannot be undone from the UI.")) {
+                          onClick={async () => {
+                            const ok = await useConfirmStore.getState().ask(
+                              "Delete this entry?",
+                              "This cannot be undone from the UI.",
+                            );
+                            if (ok) {
                               deleteMutation.mutate(o.entryId);
                             }
                           }}
