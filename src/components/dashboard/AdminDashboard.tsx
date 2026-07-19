@@ -49,7 +49,7 @@ export function AdminDashboard() {
           },
         ]}
       />
-      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
+      <div className="rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_10px_40px_-12px_rgba(37,99,235,0.12)] ring-1 ring-blue-100/60 backdrop-blur-xl sm:p-8">
         {tab === "entries" && <EntriesPanel />}
         {tab === "objections" && <ObjectionsPanel />}
       </div>
@@ -85,26 +85,27 @@ function EntriesPanel() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-serif text-2xl text-slate-900">All entries</h2>
+          <h2 className="font-serif text-2xl tracking-tight text-slate-900">All entries</h2>
           <p className="mt-1 text-sm text-slate-500">Full visibility, read-only.</p>
         </div>
-        <label className="flex items-center gap-2 text-sm text-slate-600">
+        <label className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-1.5 text-sm text-slate-600 shadow-sm">
           <input
             type="checkbox"
             checked={showDeleted}
             onChange={(e) => setShowDeleted(e.target.checked)}
+            className="accent-blue-600"
           />
           Show deleted
         </label>
       </div>
       {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
-      <div className="mt-6">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100">
         {isLoading ? (
-          <p className="text-sm text-slate-500">Loading...</p>
+          <p className="p-6 text-sm text-slate-500">Loading...</p>
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/70">
                 <TableHead>Submitted by</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Category</TableHead>
@@ -118,12 +119,12 @@ function EntriesPanel() {
               {entries?.map((entry: Entry) => (
                 <TableRow
                   key={entry.id}
-                  className={entry.deletedAt ? "opacity-50" : undefined}
+                  className={entry.deletedAt ? "opacity-50" : "hover:bg-blue-50/40"}
                 >
-                  <TableCell>{entry.submitter?.name ?? entry.submittedBy}</TableCell>
+                  <TableCell className="font-medium text-slate-800">{entry.submitter?.name ?? entry.submittedBy}</TableCell>
                   <TableCell className="max-w-xs truncate">{entry.description}</TableCell>
                   <TableCell className="text-slate-600">{entry.category}</TableCell>
-                  <TableCell>{entry.amount}</TableCell>
+                  <TableCell className="tabular-nums">{entry.amount}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <StatusBadge status={entry.status} />
@@ -183,15 +184,15 @@ function ObjectionsPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-2xl text-slate-900">Objections</h2>
+      <h2 className="font-serif text-2xl tracking-tight text-slate-900">Objections</h2>
       <p className="mt-1 text-sm text-slate-500">Everything flagged so far.</p>
-      <div className="mt-6">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100">
         {isLoading ? (
-          <p className="text-sm text-slate-500">Loading...</p>
+          <p className="p-6 text-sm text-slate-500">Loading...</p>
         ) : objections && objections.length > 0 ? (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/70">
                 <TableHead>Entry</TableHead>
                 <TableHead>Raised by</TableHead>
                 <TableHead>Note</TableHead>
@@ -200,17 +201,17 @@ function ObjectionsPanel() {
             </TableHeader>
             <TableBody>
               {objections.map((o) => (
-                <TableRow key={o.id}>
+                <TableRow key={o.id} className="hover:bg-blue-50/40">
                   <TableCell className="max-w-xs truncate">{o.entry?.description ?? o.entryId}</TableCell>
                   <TableCell>{o.raiser?.name ?? o.raisedBy}</TableCell>
-                  <TableCell className="max-w-xs truncate">{o.note}</TableCell>
-                  <TableCell>{new Date(o.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell className="max-w-xs truncate text-slate-600">{o.note}</TableCell>
+                  <TableCell className="text-slate-500">{new Date(o.createdAt).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         ) : (
-          <p className="text-sm text-slate-500">No objections raised.</p>
+          <p className="p-6 text-sm text-slate-500">No objections raised.</p>
         )}
       </div>
     </div>

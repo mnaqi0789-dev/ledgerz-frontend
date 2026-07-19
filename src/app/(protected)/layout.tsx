@@ -8,7 +8,8 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     <ProtectedRoute>
       <div className="min-h-screen bg-slate-50/60">
         <AppNav />
-        <div className="pt-6">{children}</div>
+        {/* extra top padding so content clears the floating pill nav */}
+        <div className="pt-24">{children}</div>
       </div>
     </ProtectedRoute>
   );

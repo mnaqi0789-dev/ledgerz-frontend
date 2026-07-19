@@ -4,10 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-});
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
   title: "LedgerZ — Finance, accounted for.",
@@ -15,9 +12,7 @@ export const metadata: Metadata = {
     "A single, auditable system for logging entries, approving treasury actions, and keeping every financial decision visible.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen bg-white font-sans text-slate-900 antialiased">

@@ -83,7 +83,7 @@ export function ManagerDashboard() {
           },
         ]}
       />
-      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
+      <div className="rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_10px_40px_-12px_rgba(37,99,235,0.12)] ring-1 ring-blue-100/60 backdrop-blur-xl sm:p-8">
         {tab === "entries" && <EntriesPanel />}
         {tab === "objections" && <ObjectionsPanel />}
         {tab === "requests" && <RequestsPanel />}
@@ -159,16 +159,16 @@ function EntriesPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-2xl text-slate-900">All entries</h2>
+      <h2 className="font-serif text-2xl tracking-tight text-slate-900">All entries</h2>
       <p className="mt-1 text-sm text-slate-500">Review, edit, or remove any entry.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
-      <div className="mt-6">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100">
         {isLoading ? (
-          <p className="text-sm text-slate-500">Loading...</p>
+          <p className="p-6 text-sm text-slate-500">Loading...</p>
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/70">
                 <TableHead>Submitted by</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Category</TableHead>
@@ -179,11 +179,11 @@ function EntriesPanel() {
             </TableHeader>
             <TableBody>
               {entries?.map((entry) => (
-                <TableRow key={entry.id}>
-                  <TableCell>{entry.submitter?.name ?? entry.submittedBy}</TableCell>
+                <TableRow key={entry.id} className="hover:bg-blue-50/40">
+                  <TableCell className="font-medium text-slate-800">{entry.submitter?.name ?? entry.submittedBy}</TableCell>
                   <TableCell className="max-w-xs truncate">{entry.description}</TableCell>
                   <TableCell className="text-slate-600">{entry.category}</TableCell>
-                  <TableCell>{entry.amount}</TableCell>
+                  <TableCell className="tabular-nums">{entry.amount}</TableCell>
                   <TableCell className="capitalize text-slate-600">{entry.status}</TableCell>
                   <TableCell className="flex flex-wrap gap-2">
                     {entry.status === "submitted" && (
@@ -192,6 +192,7 @@ function EntriesPanel() {
                           size="sm"
                           onClick={() => approveMutation.mutate(entry.id)}
                           disabled={approveMutation.isPending}
+                          className="bg-blue-600 text-white hover:bg-blue-700"
                         >
                           Approve
                         </Button>
@@ -265,7 +266,7 @@ function EntriesPanel() {
                           </Select>
                           <Label>Description</Label>
                           <Textarea value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
-                          <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending}>
+                          <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending} className="bg-blue-600 text-white hover:bg-blue-700">
                             Save changes
                           </Button>
                         </div>
@@ -361,16 +362,16 @@ function ObjectionsPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-2xl text-slate-900">Objections</h2>
+      <h2 className="font-serif text-2xl tracking-tight text-slate-900">Objections</h2>
       <p className="mt-1 text-sm text-slate-500">Entries flagged by admin — act on them directly.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
-      <div className="mt-6">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100">
         {isLoading ? (
-          <p className="text-sm text-slate-500">Loading...</p>
+          <p className="p-6 text-sm text-slate-500">Loading...</p>
         ) : objections && objections.length > 0 ? (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/70">
                 <TableHead>Entry</TableHead>
                 <TableHead>Raised by</TableHead>
                 <TableHead>Note</TableHead>
@@ -382,10 +383,10 @@ function ObjectionsPanel() {
               {objections.map((o) => {
                 const isDeleted = !!o.entry?.deletedAt;
                 return (
-                  <TableRow key={o.id} className={isDeleted ? "opacity-50" : undefined}>
+                  <TableRow key={o.id} className={isDeleted ? "opacity-50" : "hover:bg-blue-50/40"}>
                     <TableCell className="max-w-xs truncate">{o.entry?.description ?? o.entryId}</TableCell>
                     <TableCell>{o.raiser?.name ?? o.raisedBy}</TableCell>
-                    <TableCell className="max-w-xs truncate">{o.note}</TableCell>
+                    <TableCell className="max-w-xs truncate text-slate-600">{o.note}</TableCell>
                     <TableCell className="capitalize text-slate-600">{o.entry?.status ?? "—"}</TableCell>
                     <TableCell className="flex flex-wrap gap-2">
                       {o.entry?.status === "submitted" && !isDeleted && (
@@ -394,6 +395,7 @@ function ObjectionsPanel() {
                             size="sm"
                             onClick={() => approveMutation.mutate(o.entryId)}
                             disabled={approveMutation.isPending}
+                            className="bg-blue-600 text-white hover:bg-blue-700"
                           >
                             Approve
                           </Button>
@@ -468,7 +470,7 @@ function ObjectionsPanel() {
                               </Select>
                               <Label>Description</Label>
                               <Textarea value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
-                              <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending}>
+                              <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending} className="bg-blue-600 text-white hover:bg-blue-700">
                                 Save changes
                               </Button>
                             </div>
@@ -497,7 +499,7 @@ function ObjectionsPanel() {
             </TableBody>
           </Table>
         ) : (
-          <p className="text-sm text-slate-500">No objections raised.</p>
+          <p className="p-6 text-sm text-slate-500">No objections raised.</p>
         )}
       </div>
     </div>
@@ -516,24 +518,17 @@ function RequestsPanel() {
     queryFn: () => getAccessRequests({ status: "pending" }),
   });
 
-const approveMutation = useMutation({
-  // 1. Accept both parameters here so the Button component stops complaining
-  mutationFn: ({ id, password }: { id: number; password: string }) => 
-    // 2. Only pass the id to the API function so TypeScript is happy
-    approveAccessRequest(id), 
-  onSuccess: (data) => {
-    setLastCreatedEmail(data.request.email);
-    queryClient.invalidateQueries({ queryKey: ["access-requests"] });
-    setApprovingId(null);
-    setPassword("");
-  },
-  onError: (err) => setActionError(err instanceof Error ? err.message : "Something went wrong"),
-});
-
-
-
-
-
+  const approveMutation = useMutation({
+    mutationFn: ({ id, password }: { id: number; password: string }) =>
+      approveAccessRequest(id),
+    onSuccess: (data) => {
+      setLastCreatedEmail(data.request.email);
+      queryClient.invalidateQueries({ queryKey: ["access-requests"] });
+      setApprovingId(null);
+      setPassword("");
+    },
+    onError: (err) => setActionError(err instanceof Error ? err.message : "Something went wrong"),
+  });
 
   const denyMutation = useMutation({
     mutationFn: (id: number) => denyAccessRequest(id),
@@ -543,21 +538,21 @@ const approveMutation = useMutation({
 
   return (
     <div>
-      <h2 className="font-serif text-2xl text-slate-900">Access requests</h2>
+      <h2 className="font-serif text-2xl tracking-tight text-slate-900">Access requests</h2>
       <p className="mt-1 text-sm text-slate-500">Approve to create the account, or deny it.</p>
       {actionError && <p className="mt-3 text-sm text-rose-600">{actionError}</p>}
       {lastCreatedEmail && (
-        <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+        <div className="mt-3 rounded-2xl border border-blue-200 bg-blue-50/70 p-3 text-sm text-blue-700">
           Account created for {lastCreatedEmail} — share the password with them directly.
         </div>
       )}
-      <div className="mt-6">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100">
         {isLoading ? (
-          <p className="text-sm text-slate-500">Loading...</p>
+          <p className="p-6 text-sm text-slate-500">Loading...</p>
         ) : requests && requests.length > 0 ? (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/70">
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
@@ -567,11 +562,11 @@ const approveMutation = useMutation({
             </TableHeader>
             <TableBody>
               {requests.map((r) => (
-                <TableRow key={r.id}>
-                  <TableCell>{r.name}</TableCell>
-                  <TableCell>{r.email}</TableCell>
+                <TableRow key={r.id} className="hover:bg-blue-50/40">
+                  <TableCell className="font-medium text-slate-800">{r.name}</TableCell>
+                  <TableCell className="text-slate-600">{r.email}</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="capitalize">
+                    <Badge variant="outline" className="border-blue-200 bg-blue-50 capitalize text-blue-700">
                       {r.requestedRole}
                     </Badge>
                   </TableCell>
@@ -584,7 +579,7 @@ const approveMutation = useMutation({
                         if (!open) setPassword("");
                       }}
                     >
-                      <DialogTrigger render={<Button size="sm" />}>Approve</DialogTrigger>
+                      <DialogTrigger render={<Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700" />}>Approve</DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
                           <DialogTitle>Set a password for {r.name}</DialogTitle>
@@ -597,13 +592,13 @@ const approveMutation = useMutation({
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Choose a password to share with them"
                           />
-                         <Button
-  onClick={() => approveMutation.mutate({ id: r.id, password })}
-  disabled={approveMutation.isPending || password.length < 8}
->
-  Create account
-</Button>
-
+                          <Button
+                            onClick={() => approveMutation.mutate({ id: r.id, password })}
+                            disabled={approveMutation.isPending || password.length < 8}
+                            className="bg-blue-600 text-white hover:bg-blue-700"
+                          >
+                            Create account
+                          </Button>
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -621,7 +616,7 @@ const approveMutation = useMutation({
             </TableBody>
           </Table>
         ) : (
-          <p className="text-sm text-slate-500">No pending requests.</p>
+          <p className="p-6 text-sm text-slate-500">No pending requests.</p>
         )}
       </div>
     </div>

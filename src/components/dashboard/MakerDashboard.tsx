@@ -56,7 +56,7 @@ export function MakerDashboard() {
           { value: "mine", label: "Your entries", icon: <ListChecks className="h-4 w-4" /> },
         ]}
       />
-      <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
+      <div className="rounded-3xl border border-slate-200/70 bg-white/70 p-6 shadow-[0_10px_40px_-12px_rgba(37,99,235,0.12)] ring-1 ring-blue-100/60 backdrop-blur-xl sm:p-8">
         {tab === "submit" && <SubmitEntryPanel />}
         {tab === "mine" && <YourEntriesPanel />}
       </div>
@@ -76,7 +76,6 @@ function SubmitEntryPanel() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-
     if (!amount || !type || !category || !description) {
       setError("All fields are required");
       return;
@@ -99,7 +98,7 @@ function SubmitEntryPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-2xl text-slate-900">Submit an entry</h2>
+      <h2 className="font-serif text-2xl tracking-tight text-slate-900">Submit an entry</h2>
       <p className="mt-1 text-sm text-slate-500">Log a new transaction for review.</p>
       <form onSubmit={handleSubmit} className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
@@ -142,7 +141,7 @@ function SubmitEntryPanel() {
         </div>
         {error && <p className="text-sm text-rose-600 sm:col-span-2">{error}</p>}
         <div className="sm:col-span-2">
-          <Button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={submitting} className="bg-blue-600 text-white hover:bg-blue-700">
             {submitting ? "Submitting..." : "Submit entry"}
           </Button>
         </div>
@@ -191,15 +190,15 @@ function YourEntriesPanel() {
 
   return (
     <div>
-      <h2 className="font-serif text-2xl text-slate-900">Your entries</h2>
+      <h2 className="font-serif text-2xl tracking-tight text-slate-900">Your entries</h2>
       <p className="mt-1 text-sm text-slate-500">Everything you have submitted so far.</p>
-      <div className="mt-6">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100">
         {isLoading ? (
-          <p className="text-sm text-slate-500">Loading entries...</p>
+          <p className="p-6 text-sm text-slate-500">Loading entries...</p>
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/70">
                 <TableHead>Description</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Amount</TableHead>
@@ -209,7 +208,7 @@ function YourEntriesPanel() {
             </TableHeader>
             <TableBody>
               {entries?.map((entry) => (
-                <TableRow key={entry.id}>
+                <TableRow key={entry.id} className="hover:bg-blue-50/40">
                   <TableCell className="max-w-xs truncate">
                     {entry.description}
                     {entry.status === "rejected" && entry.rejectionReason && (
@@ -217,7 +216,7 @@ function YourEntriesPanel() {
                     )}
                   </TableCell>
                   <TableCell className="text-slate-600">{entry.category}</TableCell>
-                  <TableCell>{entry.amount}</TableCell>
+                  <TableCell className="tabular-nums">{entry.amount}</TableCell>
                   <TableCell>
                     <StatusBadge status={entry.status} />
                   </TableCell>
@@ -266,7 +265,7 @@ function YourEntriesPanel() {
                             <Label>Description</Label>
                             <Textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                             {error && <p className="text-sm text-rose-600">{error}</p>}
-                            <Button onClick={() => resubmitMutation.mutate()} disabled={resubmitMutation.isPending}>
+                            <Button onClick={() => resubmitMutation.mutate()} disabled={resubmitMutation.isPending} className="bg-blue-600 text-white hover:bg-blue-700">
                               Resubmit
                             </Button>
                           </div>

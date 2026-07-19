@@ -40,19 +40,15 @@ export default function TransactionsPage() {
         <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2">
-              <span className="h-1 w-1 rounded-full bg-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-700">
-                Ledger
-              </span>
+              <span className="h-1 w-1 rounded-full bg-blue-600" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-blue-700">Ledger</span>
             </div>
-            <h1 className="mt-2 font-serif text-4xl tracking-tight text-slate-900 sm:text-5xl">
-              Transactions
-            </h1>
+            <h1 className="mt-2 font-serif text-4xl tracking-tight text-slate-900 sm:text-5xl">Transactions</h1>
           </div>
           <p className="text-sm text-slate-500">{entries?.length ?? 0} records</p>
         </header>
 
-        <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.10)] backdrop-blur-xl sm:p-8">
+        <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_-12px_rgba(37,99,235,0.10)] backdrop-blur-xl sm:p-8">
           <div className="grid gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <Label>Category</Label>
@@ -72,9 +68,7 @@ export default function TransactionsPage() {
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All statuses</SelectItem>
-                  {statuses.map((item) => (
-                    <SelectItem key={item} value={item}>{item}</SelectItem>
-                  ))}
+                  {statuses.map((item) => (<SelectItem key={item} value={item}>{item}</SelectItem>))}
                 </SelectContent>
               </Select>
             </div>
@@ -90,9 +84,7 @@ export default function TransactionsPage() {
 
           {hasActiveFilters && (
             <div className="mt-4 flex justify-end">
-              <Button variant="ghost" size="sm" onClick={resetFilters}>
-                Reset filters
-              </Button>
+              <Button variant="ghost" size="sm" onClick={resetFilters} className="rounded-full">Reset filters</Button>
             </div>
           )}
 
@@ -109,28 +101,18 @@ export default function TransactionsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isLoading && (
-                  <TableRow><TableCell colSpan={6} className="h-28 text-center text-slate-500">Loading transactions...</TableCell></TableRow>
-                )}
-                {isError && (
-                  <TableRow><TableCell colSpan={6} className="h-28 text-center text-rose-600">Transactions could not be loaded.</TableCell></TableRow>
-                )}
+                {isLoading && (<TableRow><TableCell colSpan={6} className="h-28 text-center text-slate-500">Loading transactions...</TableCell></TableRow>)}
+                {isError && (<TableRow><TableCell colSpan={6} className="h-28 text-center text-rose-600">Transactions could not be loaded.</TableCell></TableRow>)}
                 {!isLoading && !isError && entries?.length === 0 && (
                   <TableRow><TableCell colSpan={6} className="h-28 text-center text-slate-500">No transactions match these filters.</TableCell></TableRow>
                 )}
                 {entries?.map((entry) => (
                   <TableRow key={entry.id}>
-                    <TableCell className="whitespace-nowrap text-slate-500">
-                      {new Date(entry.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="min-w-52 max-w-sm whitespace-normal text-slate-900">
-                      {entry.description}
-                    </TableCell>
+                    <TableCell className="whitespace-nowrap text-slate-500">{new Date(entry.createdAt).toLocaleDateString()}</TableCell>
+                    <TableCell className="min-w-52 max-w-sm whitespace-normal text-slate-900">{entry.description}</TableCell>
                     <TableCell className="capitalize text-slate-600">{entry.type.replaceAll("_", " ")}</TableCell>
                     <TableCell className="capitalize text-slate-600">{entry.category.replaceAll("_", " ")}</TableCell>
-                    <TableCell className="whitespace-nowrap font-medium text-slate-900">
-                      {formatCurrency(entry.amount)}
-                    </TableCell>
+                    <TableCell className="whitespace-nowrap font-medium text-slate-900">{formatCurrency(entry.amount)}</TableCell>
                     <TableCell><StatusBadge status={entry.status} /></TableCell>
                   </TableRow>
                 ))}
